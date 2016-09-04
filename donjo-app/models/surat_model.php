@@ -333,6 +333,8 @@
 		$tgl = tgl_indo(date("Y m d"));
 		$thn = date("Y");
 		$individu = $this->get_data_surat($id);
+		$ayah = $this->get_data_ayah($id);
+		$ibu = $this->get_data_ibu($id);
 		$config = $this->get_data_desa();
 		$surat = $this->get_surat($url);
 
@@ -416,6 +418,18 @@
 			$buffer=str_replace("[tanggallahir]","$tgllhr",$buffer);
 			$buffer=str_replace("[ttl]","$individu[tempatlahir]/$tgllhr",$buffer);
 			$buffer=str_replace("[tempat_tgl_lahir]","$individu[tempatlahir]/$tgllhr",$buffer);
+
+			// DATA AYAH dan IBU
+			$buffer=str_replace("[d_nama_ibu]","$ibu[nama]",$buffer);
+			$buffer=str_replace("[d_nik_ibu]","$ibu[nik]",$buffer);
+			$buffer=str_replace("[d_tanggallahir_ibu]","$ibu[tanggallahir]",$buffer);
+			$buffer=str_replace("[d_pekerjaan_ibu]","$ibu[pek]",$buffer);
+			$buffer=str_replace("[d_alamat_ibu]","RT $ibu[rt] / RW $ibu[rw] $ibu[dusun]",$buffer);
+			$buffer=str_replace("[d_nama_ayah]","$ayah[nama]",$buffer);
+			$buffer=str_replace("[d_nik_ayah]","$ayah[nik]",$buffer);
+			$buffer=str_replace("[d_tanggallahir_ayah]","$ayah[tanggallahir]",$buffer);
+			$buffer=str_replace("[d_pekerjaan_ayah]","$ayah[pek]",$buffer);
+			$buffer=str_replace("[d_alamat_ayah]","RT $ayah[rt] / RW $ayah[rw] $ayah[dusun]",$buffer);
 
 			//DATA DARI FORM INPUT SURAT
 			// Kode isian yang disediakan pada SID CRI 3.04
