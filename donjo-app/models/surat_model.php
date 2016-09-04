@@ -185,7 +185,20 @@
 	}
 
 	function get_data_pribadi($id=0){
-		$sql   = "SELECT u.*,h.nama as hubungan, p.nama as kepala_kk,g.nama as gol_darah,d.nama as pend,r.nama as pek,m.nama as men, w.nama as wn, n.nama as agama,c.rw,c.rt,c.dusun,(DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( u.tanggallahir ) ) , '%Y' ) +0) as umur, sex.nama as sex  FROM tweb_penduduk u left join tweb_penduduk_hubungan h on u.kk_level=h.id left join tweb_keluarga k on u.id_kk=k.id left join tweb_penduduk p on k.nik_kepala=p.id left join tweb_golongan_darah g on u.golongan_darah_id=g.id  left join tweb_penduduk_pendidikan_kk d on u.pendidikan_kk_id=d.id left join tweb_penduduk_pekerjaan r on u.pekerjaan_id=r.id  left join tweb_cacat m on u.cacat_id=m.id   left join tweb_wil_clusterdesa c on u.id_cluster=c.id   left join tweb_penduduk_warganegara w on u.warganegara_id=w.id  left join tweb_penduduk_agama n on u.agama_id=n.id LEFT JOIN tweb_penduduk_sex sex ON u.sex=sex.id WHERE u.id=?";
+		$sql   = "SELECT u.*,h.nama as hubungan, p.nama as kepala_kk,g.nama as gol_darah,d.nama as pend,r.nama as pek,m.nama as men, w.nama as wn, n.nama as agama,c.rw,c.rt,c.dusun,(DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( u.tanggallahir ) ) , '%Y' ) +0) as umur, sex.nama as sex
+			FROM tweb_penduduk u
+			left join tweb_penduduk_hubungan h on u.kk_level=h.id
+			left join tweb_keluarga k on u.id_kk=k.id
+			left join tweb_penduduk p on k.nik_kepala=p.id
+			left join tweb_golongan_darah g on u.golongan_darah_id=g.id
+			left join tweb_penduduk_pendidikan_kk d on u.pendidikan_kk_id=d.id
+			left join tweb_penduduk_pekerjaan r on u.pekerjaan_id=r.id
+			left join tweb_cacat m on u.cacat_id=m.id
+			left join tweb_wil_clusterdesa c on u.id_cluster=c.id
+			left join tweb_penduduk_warganegara w on u.warganegara_id=w.id
+			left join tweb_penduduk_agama n on u.agama_id=n.id
+			LEFT JOIN tweb_penduduk_sex sex ON u.sex=sex.id
+			WHERE u.id=?";
 		$query = $this->db->query($sql,$id);
 		$data  = $query->row_array();
 		return $data;
@@ -198,7 +211,7 @@
 		return $data;
 	}
 
-	function get_penduduk_ortu($id=0){
+	function get_data_penduduk($id=0){
 		$sql   = "SELECT u.* FROM tweb_penduduk u WHERE id=?";
 		$query = $this->db->query($sql,$id);
 		$data  = $query->row_array();
@@ -232,19 +245,27 @@
 	}
 
 	function get_data_ayah($id=0){
-		$sql   = "SELECT u.*,h.nama as hubungan, p.nama as kepala_kk,g.nama as gol_darah,d.nama as pend,r.nama as pek,m.nama as men, w.nama as wn,c.rw,c.rt,c.dusun, n.nama as agama FROM tweb_penduduk u left join tweb_penduduk_hubungan h on u.kk_level=h.id left join tweb_keluarga k on u.id_kk=k.id left join tweb_penduduk p on k.nik_kepala=p.id left join tweb_golongan_darah g on u.golongan_darah_id=g.id  left join tweb_penduduk_pendidikan d on u.pendidikan_id=d.id left join tweb_penduduk_pekerjaan r on u.pekerjaan_id=r.id  left join tweb_cacat m on u.cacat_id=m.id left join tweb_penduduk_warganegara w on u.warganegara_id=w.id  left join tweb_wil_clusterdesa c on u.id_cluster=c.id  left join tweb_penduduk_agama n on u.agama_id=n.id  WHERE u.nik=(SELECT ayah_nik from tweb_penduduk where id='$id') or (u.id_kk=(SELECT id_kk FROM tweb_penduduk where id=$id) AND u.kk_level=1) limit 1";
+		$sql = "SELECT u.id
+			FROM tweb_penduduk u
+			WHERE u.nik=(SELECT ayah_nik from tweb_penduduk where id=$id) or (u.id_kk=(SELECT id_kk FROM tweb_penduduk where id=$id) AND u.kk_level=1) limit 1";
 		$query = $this->db->query($sql);
 		$data  = $query->row_array();
-		return $data;
+		$ayah_id = $data['id'];
+		$ayah = $this->get_data_pribadi($ayah_id);
+		return $ayah;
 	}
-
 
 	function get_data_ibu($id=0){
-		$sql   = "SELECT u.*,h.nama as hubungan, p.nama as kepala_kk,g.nama as gol_darah,d.nama as pend,r.nama as pek,m.nama as men, w.nama as wn,c.rw,c.rt,c.dusun, n.nama as agama  FROM tweb_penduduk u left join tweb_penduduk_hubungan h on u.kk_level=h.id left join tweb_keluarga k on u.id_kk=k.id left join tweb_penduduk p on k.nik_kepala=p.id left join tweb_golongan_darah g on u.golongan_darah_id=g.id  left join tweb_penduduk_pendidikan d on u.pendidikan_id=d.id left join tweb_penduduk_pekerjaan r on u.pekerjaan_id=r.id  left join tweb_cacat m on u.cacat_id=m.id  left join tweb_penduduk_warganegara w on u.warganegara_id=w.id  left join tweb_wil_clusterdesa c on u.id_cluster=c.id   left join tweb_penduduk_agama n on u.agama_id=n.id   WHERE u.nik=(SELECT ibu_nik from tweb_penduduk where id=?)  or (u.id_kk=(SELECT id_kk FROM tweb_penduduk where id=$id) AND u.kk_level=3) limit 1";
-		$query = $this->db->query($sql,$id);
+		$sql = "SELECT u.id
+			FROM tweb_penduduk u
+			WHERE u.nik=(SELECT ibu_nik from tweb_penduduk where id=?)  or (u.id_kk=(SELECT id_kk FROM tweb_penduduk where id=$id) AND u.kk_level=3) limit 1";
+		$query = $this->db->query($sql, $id);
 		$data  = $query->row_array();
-		return $data;
+		$ibu_id = $data['id'];
+		$ibu = $this->get_data_pribadi($ibu_id);
+		return $ibu;
 	}
+
 	function get_dusun($dusun=''){
 		$sql   = "SELECT * FROM tweb_wil_clusterdesa WHERE dusun = ? AND rt = '0' AND rw = '0'";
 		$query = $this->db->query($sql,$dusun);

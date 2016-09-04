@@ -76,6 +76,8 @@ class Surat extends CI_Controller{
 
 		$data['pribadi'] = $this->surat_model->get_data_pribadi($id);
 		$data['kk'] = $this->surat_model->get_data_kk($id);
+		$data['ayah'] = $this->surat_model->get_data_ayah($id);
+		$data['ibu'] = $this->surat_model->get_data_ibu($id);
 
 		$data['desa'] = $this->surat_model->get_data_desa();
 		$data['pamong'] = $this->surat_model->get_pamong($_POST['pamong']);
