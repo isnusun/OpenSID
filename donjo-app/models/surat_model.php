@@ -245,22 +245,44 @@
 	}
 
 	function get_data_ayah($id=0){
+		$penduduk = $this->get_data_penduduk($id);
+		// Cari berdasarkan ayah_nik dulu
 		$sql = "SELECT u.id
 			FROM tweb_penduduk u
-			WHERE u.nik=(SELECT ayah_nik from tweb_penduduk where id=$id) or (u.id_kk=(SELECT id_kk FROM tweb_penduduk where id=$id) AND u.kk_level=1) limit 1";
-		$query = $this->db->query($sql);
+			WHERE u.nik=? limit 1";
+		$query = $this->db->query($sql,$penduduk['ayah_nik']);
 		$data  = $query->row_array();
+
+		// Kalau tidak ada, cari kepala keluarga pria kalau penduduknya seorang anak dalam keluarga
+		if (!$data['id'] AND $penduduk['kk_level'] == 4 ) {
+			$sql = "SELECT u.id
+				FROM tweb_penduduk u
+				WHERE (u.id_kk=(SELECT id_kk FROM tweb_penduduk where id=$id) AND u.kk_level=1 AND u.sex=1) limit 1";
+			$query = $this->db->query($sql);
+			$data  = $query->row_array();
+		}
 		$ayah_id = $data['id'];
 		$ayah = $this->get_data_pribadi($ayah_id);
 		return $ayah;
 	}
 
 	function get_data_ibu($id=0){
+		$penduduk = $this->get_data_penduduk($id);
+		// Cari berdasarkan ibu_nik dulu
 		$sql = "SELECT u.id
 			FROM tweb_penduduk u
-			WHERE u.nik=(SELECT ibu_nik from tweb_penduduk where id=?)  or (u.id_kk=(SELECT id_kk FROM tweb_penduduk where id=$id) AND u.kk_level=3) limit 1";
-		$query = $this->db->query($sql, $id);
+			WHERE u.nik=? limit 1";
+		$query = $this->db->query($sql,$penduduk['ibu_nik']);
 		$data  = $query->row_array();
+
+		// Kalau tidak ada, cari istri keluarga kalau penduduknya seorang anak dalam keluarga
+		if (!$data['id'] AND $penduduk['kk_level'] == 4 ) {
+			$sql = "SELECT u.id
+				FROM tweb_penduduk u
+				WHERE (u.id_kk=(SELECT id_kk FROM tweb_penduduk where id=$id) AND u.kk_level=3) limit 1";
+			$query = $this->db->query($sql, $id);
+			$data  = $query->row_array();
+		}
 		$ibu_id = $data['id'];
 		$ibu = $this->get_data_pribadi($ibu_id);
 		return $ibu;
@@ -366,6 +388,29 @@
 					$buffer=str_replace("[usia_suami]","$suami[umur] Tahun",$buffer);
 					$buffer=str_replace("[pekerjaan_suami]",$suami['pek'],$buffer);
 					$buffer=str_replace("[alamat_suami]","RT $suami[rt] / RW $suami[rw] $suami[dusun]",$buffer);
+					break;
+
+				case 'surat_ket_asalusul':
+					# Data orang tua apabila warga desa
+					if ($ayah) {
+						$buffer=str_replace("[form_nama_ayah]",$ayah['nama'],$buffer);
+						$buffer=str_replace("[form_tempatlahir_ayah]",$ayah['tempatlahir'],$buffer);
+						$buffer=str_replace("[form_wn_ayah]",$ayah['wn'],$buffer);
+						$buffer=str_replace("[form_tanggallahir_ayah]",$ayah['tanggallahir'],$buffer);
+						$buffer=str_replace("[form_agama_ayah]",$ayah['agama'],$buffer);
+						$buffer=str_replace("[form_pek_ayah]",$ayah['pek'],$buffer);
+						$buffer=str_replace("[form_alamat_ayah]","RT $ayah[rt] / RW $ayah[rw] $ayah[dusun]",$buffer);
+					}
+					if ($ibu) {
+						$buffer=str_replace("[form_nama_ibu]",$ibu['nama'],$buffer);
+						$buffer=str_replace("[form_tempatlahir_ibu]",$ibu['tempatlahir'],$buffer);
+						$buffer=str_replace("[form_wn_ibu]",$ibu['wn'],$buffer);
+						$buffer=str_replace("[form_tanggallahir_ibu]",$ibu['tanggallahir'],$buffer);
+						$buffer=str_replace("[form_agama_ibu]",$ibu['agama'],$buffer);
+						$buffer=str_replace("[form_pek_ibu]",$ibu['pek'],$buffer);
+						$buffer=str_replace("[form_alamat_ibu]","RT $ibu[rt] / RW $ibu[rw] $ibu[dusun]",$buffer);
+					}
+					break;
 
 				default:
 					# code...
