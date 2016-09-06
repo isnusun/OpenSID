@@ -219,10 +219,15 @@
 	}
 
 	function get_data_istri($id=0){
-		$sql   = "SELECT u.*,h.nama as hubungan, p.nama as kepala_kk,g.nama as gol_darah,d.nama as pend,r.nama as pek,m.nama as men, w.nama as wn,c.rw,c.rt,c.dusun, n.nama as agama FROM tweb_penduduk u left join tweb_penduduk_hubungan h on u.kk_level=h.id left join tweb_keluarga k on u.id_kk=k.id left join tweb_penduduk p on k.nik_kepala=p.id left join tweb_golongan_darah g on u.golongan_darah_id=g.id  left join tweb_penduduk_pendidikan d on u.pendidikan_id=d.id left join tweb_penduduk_pekerjaan r on u.pekerjaan_id=r.id  left join tweb_cacat m on u.cacat_id=m.id left join tweb_penduduk_warganegara w on u.warganegara_id=w.id  left join tweb_wil_clusterdesa c on u.id_cluster=c.id  left join tweb_penduduk_agama n on u.agama_id=n.id  WHERE u.id=(SELECT id FROM tweb_penduduk WHERE id_kk=(SELECT id_kk FROM tweb_penduduk WHERE id=$id AND kk_level=1) AND kk_level=3 limit 1)";
+		$sql = "SELECT u.id
+			FROM tweb_penduduk u
+			WHERE u.id=(SELECT id FROM tweb_penduduk WHERE id_kk=(SELECT id_kk FROM tweb_penduduk WHERE id=$id AND kk_level=1) AND kk_level=3 limit 1)";
 		$query = $this->db->query($sql);
 		$data  = $query->row_array();
-		return $data;
+
+		$istri_id = $data['id'];
+		$istri = $this->get_data_pribadi($istri_id);
+		return $istri;
 	}
 
 	function get_data_suami($id=0){
@@ -388,6 +393,18 @@
 					$buffer=str_replace("[usia_suami]","$suami[umur] Tahun",$buffer);
 					$buffer=str_replace("[pekerjaan_suami]",$suami['pek'],$buffer);
 					$buffer=str_replace("[alamat_suami]","RT $suami[rt] / RW $suami[rw] $suami[dusun]",$buffer);
+					break;
+
+				case 'surat_permohonan_cerai':
+					# Data istri
+					$istri = $this->get_data_istri($individu['id']);
+					$buffer=str_replace("[nama_istri]",$istri['nama'],$buffer);
+					$buffer=str_replace("[nik_istri]",$istri['nik'],$buffer);
+					$buffer=str_replace("[tempatlahir_istri]","$istri[tempatlahir] Tahun",$buffer);
+					$buffer=str_replace("[tanggallahir_istri]","$istri[tanggallahir] Tahun",$buffer);
+					$buffer=str_replace("[pekerjaan_istri]",$istri['pek'],$buffer);
+					$buffer=str_replace("[agama_istri]",$istri['agama'],$buffer);
+					$buffer=str_replace("[alamat_istri]","RT $istri[rt] / RW $istri[rw] $istri[dusun]",$buffer);
 					break;
 
 				case 'surat_ket_asalusul':
