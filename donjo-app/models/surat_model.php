@@ -488,7 +488,12 @@
 			$buffer=str_replace("[keperluan]","$input[keperluan]",$buffer);
 			// $input adalah isian form surat. Kode isian dari form bisa berbentuk [form_isian]
 			// sesuai dengan panduan, atau boleh juga langsung [isian] saja
+			$isian_tanggal = array("berlaku_dari", "berlaku_sampai");
 			foreach ($input as $key => $entry){
+				// Isian tanggal diganti dengan format tanggal standar
+				if (in_array($key, $isian_tanggal)){
+					$buffer=preg_replace("/\[$key\]|\[form_$key\]/",tgl_indo(date('Y m d',strtotime($entry))),$buffer);
+				}
 				$buffer=str_replace("[form_$key]",$entry,$buffer);
 				// Diletakkan di bagian akhir karena bisa sama dengan kode isian sebelumnya
 				// dan kalau masih ada dianggap sebagai kode dari form isian
