@@ -505,7 +505,7 @@
 			$buffer=str_replace("[keperluan]","$input[keperluan]",$buffer);
 			// $input adalah isian form surat. Kode isian dari form bisa berbentuk [form_isian]
 			// sesuai dengan panduan, atau boleh juga langsung [isian] saja
-			$isian_tanggal = array("berlaku_dari", "berlaku_sampai");
+			$isian_tanggal = array("berlaku_dari", "berlaku_sampai", "tanggal");
 			foreach ($input as $key => $entry){
 				// Isian tanggal diganti dengan format tanggal standar
 				if (in_array($key, $isian_tanggal)){
