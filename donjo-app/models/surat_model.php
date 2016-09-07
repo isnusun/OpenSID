@@ -536,12 +536,18 @@
 			// DATA AYAH dan IBU
 			$buffer=str_replace("[d_nama_ibu]","$ibu[nama]",$buffer);
 			$buffer=str_replace("[d_nik_ibu]","$ibu[nik]",$buffer);
-			$buffer=str_replace("[d_tanggallahir_ibu]","$ibu[tanggallahir]",$buffer);
+			$buffer=str_replace("[d_tempatlahir_ibu]","$ibu[tempatlahir]",$buffer);
+			$buffer=str_replace("[d_tanggallahir_ibu]",tgl_indo_dari_str($ibu['tanggallahir']),$buffer);
+			$buffer=str_replace("[d_warganegara_ibu]","$ibu[wn]",$buffer);
+			$buffer=str_replace("[d_agama_ibu]","$ibu[agama]",$buffer);
 			$buffer=str_replace("[d_pekerjaan_ibu]","$ibu[pek]",$buffer);
 			$buffer=str_replace("[d_alamat_ibu]","RT $ibu[rt] / RW $ibu[rw] $ibu[dusun]",$buffer);
 			$buffer=str_replace("[d_nama_ayah]","$ayah[nama]",$buffer);
 			$buffer=str_replace("[d_nik_ayah]","$ayah[nik]",$buffer);
-			$buffer=str_replace("[d_tanggallahir_ayah]","$ayah[tanggallahir]",$buffer);
+			$buffer=str_replace("[d_tempatlahir_ayah]","$ayah[tempatlahir]",$buffer);
+			$buffer=str_replace("[d_tanggallahir_ayah]",tgl_indo_dari_str($ayah['tanggallahir']),$buffer);
+			$buffer=str_replace("[d_warganegara_ayah]","$ayah[wn]",$buffer);
+			$buffer=str_replace("[d_agama_ayah]","$ayah[agama]",$buffer);
 			$buffer=str_replace("[d_pekerjaan_ayah]","$ayah[pek]",$buffer);
 			$buffer=str_replace("[d_alamat_ayah]","RT $ayah[rt] / RW $ayah[rw] $ayah[dusun]",$buffer);
 
@@ -557,7 +563,7 @@
 			$buffer=str_replace("[keperluan]","$input[keperluan]",$buffer);
 			// $input adalah isian form surat. Kode isian dari form bisa berbentuk [form_isian]
 			// sesuai dengan panduan, atau boleh juga langsung [isian] saja
-			$isian_tanggal = array("berlaku_dari", "berlaku_sampai", "tanggal", "tgl_meninggal", "tanggal_lahir", "tanggallahir_istri", "tanggallahir_suami", "tanggal_mati");
+			$isian_tanggal = array("berlaku_dari", "berlaku_sampai", "tanggal", "tgl_meninggal", "tanggal_lahir", "tanggallahir_istri", "tanggallahir_suami", "tanggal_mati", "tanggallahir_pasangan");
 			foreach ($input as $key => $entry){
 				// Isian tanggal diganti dengan format tanggal standar
 				if (in_array($key, $isian_tanggal)){
