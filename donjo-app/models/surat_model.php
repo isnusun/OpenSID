@@ -356,10 +356,10 @@
 	}
 
 	function surat_rtf_khusus($url, $input, &$buffer, $config, $individu, $ayah, $ibu) {
+		$alamat_desa = "Desa ".$config[nama_desa].", Kecamatan ".$config[nama_kecamatan].", Kabupaten ".$config[nama_kabupaten];
 		// Proses surat yang membutuhkan pengambilan data khusus
 		switch ($url) {
 			case 'surat_persetujuan_mempelai':
-				$alamat_desa = "Desa ".$config[nama_desa].", Kecamatan ".$config[nama_kecamatan].", Kabupaten ".$config[nama_kabupaten];
 				# Data suami
 				if ($input['id_suami']) {
 					$suami = $this->get_data_surat($input['id_suami']);
@@ -405,6 +405,28 @@
 				$buffer=str_replace("[pekerjaan_istri]",$istri['pek'],$buffer);
 				$buffer=str_replace("[agama_istri]",$istri['agama'],$buffer);
 				$buffer=str_replace("[alamat_istri]","RT $istri[rt] / RW $istri[rw] $istri[dusun]",$buffer);
+				break;
+
+			case 'surat_ket_orangtua':
+				# Data orang tua apabila warga desa
+				if ($ayah) {
+					$buffer=str_replace("[form_nama_ayah]",$ayah['nama'],$buffer);
+					$buffer=str_replace("[form_tempat_lahir_ayah]",$ayah['tempatlahir'],$buffer);
+					$buffer=str_replace("[form_tgl_lahir_ayah]",tgl_indo_dari_str($ayah['tanggallahir']),$buffer);
+					$buffer=str_replace("[form_wn_ayah]",$ayah['wn'],$buffer);
+					$buffer=str_replace("[form_agama_ayah]",$ayah['agama'],$buffer);
+					$buffer=str_replace("[form_pekerjaan_ayah]",$ayah['pek'],$buffer);
+					$buffer=str_replace("[form_tempat_tinggal_ayah]","RT $ayah[rt] / RW $ayah[rw] $ayah[dusun] $alamat_desa",$buffer);
+				}
+				if ($ibu) {
+					$buffer=str_replace("[form_nama_ibu]",$ibu['nama'],$buffer);
+					$buffer=str_replace("[form_tempat_lahir_ibu]",$ibu['tempatlahir'],$buffer);
+					$buffer=str_replace("[form_tgl_lahir_ibu]",tgl_indo_dari_str($ibu['tanggallahir']),$buffer);
+					$buffer=str_replace("[form_wn_ibu]",$ibu['wn'],$buffer);
+					$buffer=str_replace("[form_agama_ibu]",$ibu['agama'],$buffer);
+					$buffer=str_replace("[form_pekerjaan_ibu]",$ibu['pek'],$buffer);
+					$buffer=str_replace("[form_tempat_tinggal_ibu]","RT $ibu[rt] / RW $ibu[rw] $ibu[dusun] $alamat_desa",$buffer);
+				}
 				break;
 
 			case 'surat_ket_asalusul':
@@ -563,7 +585,9 @@
 			$buffer=str_replace("[keperluan]","$input[keperluan]",$buffer);
 			// $input adalah isian form surat. Kode isian dari form bisa berbentuk [form_isian]
 			// sesuai dengan panduan, atau boleh juga langsung [isian] saja
-			$isian_tanggal = array("berlaku_dari", "berlaku_sampai", "tanggal", "tgl_meninggal", "tanggal_lahir", "tanggallahir_istri", "tanggallahir_suami", "tanggal_mati", "tanggallahir_pasangan");
+			$isian_tanggal = array("berlaku_dari", "berlaku_sampai", "tanggal", "tgl_meninggal",
+				"tanggal_lahir", "tanggallahir_istri", "tanggallahir_suami", "tanggal_mati",
+				"tanggallahir_pasangan", "tgl_lahir_ayah", "tgl_lahir_ibu");
 			foreach ($input as $key => $entry){
 				// Isian tanggal diganti dengan format tanggal standar
 				if (in_array($key, $isian_tanggal)){
