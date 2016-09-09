@@ -56,6 +56,7 @@ class Surat extends CI_Controller{
 
 		$data['penduduk'] = $this->surat_model->list_penduduk();
 		$data['pamong'] = $this->surat_model->list_pamong();
+		$data['perempuan'] = $this->surat_model->list_penduduk_perempuan();
 
 		if ($url == 'surat_persetujuan_mempelai') {
 			// Perlu disimpan di SESSION karena belum ketemu cara
@@ -78,7 +79,6 @@ class Surat extends CI_Controller{
 				$data['istri']=NULL;
 			}
 			$data['laki'] = $this->surat_model->list_penduduk_laki();
-			$data['perempuan'] = $this->surat_model->list_penduduk_perempuan();
 		}
 
 		$data['surat_url'] = rtrim($_SERVER['REQUEST_URI'], "/clear");
