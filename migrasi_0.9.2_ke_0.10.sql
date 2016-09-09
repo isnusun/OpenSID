@@ -2,10 +2,10 @@
 -- --------------------------------------------------------
 --
 -- Mengubah struktur database SID:
---   * menambahkan unique index di tabel tweb_surat_format
---   * menambah dan mengubah baris surat di tabel tweb_surat_format untuk menyesuaikan
+--   1. menambahkan unique index di tabel tweb_surat_format
+--   2. menambah dan mengubah baris surat di tabel tweb_surat_format untuk menyesuaikan
 --     dengan perubahan yang dilakukan untuk membuat template surat Export Doc
---
+--   3. menambah kolom tgl_cetak_kk di tabel tweb_keluarga
 -- --------------------------------------------------------
 --
 
@@ -54,5 +54,7 @@ ON DUPLICATE KEY UPDATE
   kode_surat = VALUES(kode_surat);
 
 DROP INDEX migrasi_0_10_url_surat ON tweb_surat_format;
+
+ALTER TABLE tweb_keluarga ADD tgl_cetak_kk datetime;
 
 
