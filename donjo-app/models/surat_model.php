@@ -400,8 +400,8 @@
 				$istri = $this->get_data_istri($individu['id']);
 				$buffer=str_replace("[nama_istri]",$istri['nama'],$buffer);
 				$buffer=str_replace("[nik_istri]",$istri['nik'],$buffer);
-				$buffer=str_replace("[tempatlahir_istri]","$istri[tempatlahir] Tahun",$buffer);
-				$buffer=str_replace("[tanggallahir_istri]","tgl_indo_dari_str($istri[tanggallahir]) Tahun",$buffer);
+				$buffer=str_replace("[tempatlahir_istri]","$istri[tempatlahir]",$buffer);
+				$buffer=str_replace("[tanggallahir_istri]",tgl_indo_dari_str($istri['tanggallahir']),$buffer);
 				$buffer=str_replace("[pekerjaan_istri]",$istri['pek'],$buffer);
 				$buffer=str_replace("[agama_istri]",$istri['agama'],$buffer);
 				$buffer=str_replace("[alamat_istri]","RT $istri[rt] / RW $istri[rw] $istri[dusun]",$buffer);
