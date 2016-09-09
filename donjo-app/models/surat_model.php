@@ -587,7 +587,7 @@
 			// sesuai dengan panduan, atau boleh juga langsung [isian] saja
 			$isian_tanggal = array("berlaku_dari", "berlaku_sampai", "tanggal", "tgl_meninggal",
 				"tanggal_lahir", "tanggallahir_istri", "tanggallahir_suami", "tanggal_mati",
-				"tanggallahir_pasangan", "tgl_lahir_ayah", "tgl_lahir_ibu", "tgl_berakhir_paspor", "tgl_akte_perkawinan", "tgl_perceraian");
+				"tanggallahir_pasangan", "tgl_lahir_ayah", "tgl_lahir_ibu", "tgl_berakhir_paspor", "tgl_akte_perkawinan", "tgl_perceraian", "tanggallahir");
 			foreach ($input as $key => $entry){
 				// Isian tanggal diganti dengan format tanggal standar
 				if (in_array($key, $isian_tanggal)){
