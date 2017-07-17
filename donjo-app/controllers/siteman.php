@@ -31,12 +31,13 @@ class Siteman extends CI_Controller {
 		$this->user_model->siteman();
 		redirect('main');
 	}
-	
+	/*
 	function login(){
 		$this->user_model->login();
 		$header = $this->header_model->get_config();
 		$this->load->view('siteman',$header);
 	}
+	*/
 
 	function flash(){
 		$this->load->view('config');
